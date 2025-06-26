@@ -9,9 +9,18 @@ const entriesRouter = require('./routes/entries');
 const app = express();
 
 const allowedOrigins = ['https://dailydose-fe-psi.vercel.app', 'http://localhost:5173'];
-// Middleware
-// const cors = require('cors');
-app.use(cors({ origin:allowedOrigins, credentials:true })); // Enable cross-origin requests
+
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+}));
+ // Enable cross-origin requests
 app.use(express.json()); // Parse JSON bodies
 
 // Connect to MongoDB
